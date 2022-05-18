@@ -166,10 +166,36 @@ SimulationFrontend::SimulationFrontend()
     update_camera();
 }
 
+SimulationFrontend::~SimulationFrontend()
+{
+    delete hdr_fbo;
+    delete bloom_horizontal_fbo;
+    delete bloom_vertical_fbo;
+    delete line_vbo;
+    delete bodies_instance_vbo;
+    delete sphere_vbo;
+    delete screen_vbo;
+    delete body_vao;
+    delete line_vao;
+    delete screen_vao;
+    delete line_shader;
+    delete body_shader;
+    delete bloom_shader;
+    delete final_shader;  
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+
+    SDL_GL_DeleteContext(context);
+    SDL_DestroyWindow(window);
+    SDL_Quit(); 
+}
+
 void SimulationFrontend::handle_events()
 {   
     constexpr int MAX_CLICK_TIME = 10;
-    constexpr float SCROLL_COEFF = 0.3f;
+    constexpr float SCROLL_DELTA = 0.05f;
 
     // If the mouse was clicked last frame, it isn't this frame
     mouse_clicked = false;
@@ -189,7 +215,9 @@ void SimulationFrontend::handle_events()
             }
             break;
         case SDL_MOUSEWHEEL:
-            cam_dist += (float) event.wheel.y * SCROLL_COEFF;
+            cam_dist *= event.wheel.y > 0
+                ? 1.0f - SCROLL_DELTA
+                : 1.0f + SCROLL_DELTA;
             break;
         case SDL_MOUSEBUTTONDOWN:
             holding = true;
@@ -337,30 +365,4 @@ void SimulationFrontend::run()
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();
-}
-
-SimulationFrontend::~SimulationFrontend()
-{
-    delete hdr_fbo;
-    delete bloom_horizontal_fbo;
-    delete bloom_vertical_fbo;
-    delete line_vbo;
-    delete bodies_instance_vbo;
-    delete sphere_vbo;
-    delete screen_vbo;
-    delete body_vao;
-    delete line_vao;
-    delete screen_vao;
-    delete line_shader;
-    delete body_shader;
-    delete bloom_shader;
-    delete final_shader;  
-
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplSDL2_Shutdown();
-    ImGui::DestroyContext();
-
-    SDL_GL_DeleteContext(context);
-    SDL_DestroyWindow(window);
-    SDL_Quit(); 
 }

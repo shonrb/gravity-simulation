@@ -46,6 +46,7 @@ vec3 reflector_body()
 {
     vec3 result = calculate_light(dir_light_dir, dir_light_colour);
 
+    // Add ambient light
     result += dir_light_colour * v_colour * ambient_strength;
 
     for (int i = 0; i < num_lights; ++i) {
