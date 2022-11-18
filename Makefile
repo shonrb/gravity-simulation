@@ -33,6 +33,7 @@ endif
 	$(CC) $(FLAGS) -c -o binaries/$@ $<
 
 libs:
+	mkdir -p binaries
 	make imgui.o
 	make imgui_draw.o
 	make imgui_tables.o
