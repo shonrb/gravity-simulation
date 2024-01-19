@@ -4,11 +4,11 @@
 #include <string>
 
 class Shader {
-public:
     unsigned handle;
     unsigned vert_handle;
     unsigned frag_handle;
 
+public:
     Shader(const char *vert_path, const char *frag_path);
     ~Shader();
     void uniform_int(const char *name, int value) const;

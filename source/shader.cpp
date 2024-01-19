@@ -112,3 +112,4 @@ void Shader::uniform_mat4(const char* name, float* value) const
     int location = glGetUniformLocation(handle, name);
     glUniformMatrix4fv(location, 1, GL_FALSE, value);
 }
+

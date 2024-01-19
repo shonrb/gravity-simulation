@@ -15,8 +15,8 @@ struct BodyPhysics {
     glm::vec3 velocity = glm::vec3(0.0f);
     glm::vec3 orig_position = glm::vec3(0.0f);
     glm::vec3 orig_velocity = glm::vec3(0.0f);
-    float mass         = 1.0f;
-    float radius       = 1.0f;
+    float mass = 1.0f;
+    float radius = 1.0f;
 };
 
 struct BodyInstance {
@@ -50,3 +50,4 @@ private:
     void calculate_trajectories();
     void update_positions();
 };
+

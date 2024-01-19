@@ -27,18 +27,20 @@ void GLFrameBuffer::attach_textures(int count)
         unsigned texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 
-                     width, height, 0, 
-                     GL_RGBA, GL_FLOAT, NULL);
+        glTexImage2D(
+            GL_TEXTURE_2D, 0, GL_RGBA16F, 
+            width, height, 0, 
+            GL_RGBA, GL_FLOAT, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, 
-                               GL_COLOR_ATTACHMENT0 + i, 
-                               GL_TEXTURE_2D,
-                               texture, 
-                               0);
+        glFramebufferTexture2D(
+            GL_FRAMEBUFFER, 
+            GL_COLOR_ATTACHMENT0 + i, 
+            GL_TEXTURE_2D,
+            texture, 
+            0);
         textures.push_back(texture);
         attachments.push_back(GL_COLOR_ATTACHMENT0 + i);
     }
@@ -54,14 +56,16 @@ void GLFrameBuffer::attach_renderbuffer()
     use();
     glGenRenderbuffers(1, &renderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, 
-                          GL_DEPTH_COMPONENT, 
-                          width, 
-                          height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, 
-                              GL_DEPTH_ATTACHMENT, 
-                              GL_RENDERBUFFER, 
-                              renderbuffer);
+    glRenderbufferStorage(
+        GL_RENDERBUFFER, 
+        GL_DEPTH_COMPONENT, 
+        width, 
+        height);
+    glFramebufferRenderbuffer(
+        GL_FRAMEBUFFER, 
+        GL_DEPTH_ATTACHMENT, 
+        GL_RENDERBUFFER, 
+        renderbuffer);
 }
 
 void GLFrameBuffer::use_texture(int index, unsigned texture_index) const
@@ -123,3 +127,4 @@ void GLVertexArray::use() const
 {
     glBindVertexArray(handle);
 }
+

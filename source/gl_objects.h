@@ -7,13 +7,13 @@
 #include <iostream>
 
 class GLFrameBuffer {
-public:
     unsigned handle;
     unsigned renderbuffer;
     int width;
     int height;
     std::vector<unsigned> textures;
 
+public:
     GLFrameBuffer(int w, int h);
     ~GLFrameBuffer();
     void attach_textures(int count);
@@ -26,9 +26,9 @@ public:
 void use_default_framebuffer();
 
 class GLVertexBuffer {
-public:
     unsigned handle;
 
+public:
     GLVertexBuffer();
     ~GLVertexBuffer();
     template<typename T> 
@@ -45,10 +45,10 @@ void GLVertexBuffer::set_data(const typename std::vector<T>& buffer, GLenum usag
 }
 
 class GLVertexArray {
-public:
     unsigned handle;
     size_t count = 0;
 
+public:
     enum Type {
         Attr, 
         Padding, 
