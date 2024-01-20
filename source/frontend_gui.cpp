@@ -127,6 +127,9 @@ void SimulationFrontend::ui_body_selection()
 
             for (int i = 0; i < simulation.num_bodies; ++i) {
                 auto name = simulation.body_info[i].name; 
+                if (i == selected_body) {
+                    name = "<" + name + ">";
+                }
                 name += "##" + std::to_string(i); // Make unique
                 if (ImGui::Selectable(name.c_str())) {
                     selected_body = i;
@@ -139,7 +142,6 @@ void SimulationFrontend::ui_body_selection()
             }
             ImGui::EndPopup();
         }
-
     };
 
     select(
