@@ -19,10 +19,25 @@
 #include "gl_objects.h"
 #include "simulation.h"
 
-class SimulationFrontend {
-    const unsigned SPHERE_VERTEX_COUNT;
-    const unsigned SCREEN_VERTEX_COUNT;
+constexpr std::array SPHERE_MESH = {
+#include "../resources/spheremesh.txt"
+};
 
+constexpr std::array SCREEN_MESH = {
+//   Position       Tex coords
+    -1.0f,  1.0f,   0.0f, 1.0f,
+    -1.0f, -1.0f,   0.0f, 0.0f,
+     1.0f, -1.0f,   1.0f, 0.0f,
+    -1.0f,  1.0f,   0.0f, 1.0f,
+     1.0f, -1.0f,   1.0f, 0.0f,
+     1.0f,  1.0f,   1.0f, 1.0f
+};
+
+constexpr unsigned SPHERE_VERTEX_COUNT = SPHERE_MESH.size() / 3;
+
+constexpr unsigned SCREEN_VERTEX_COUNT = SCREEN_MESH.size() / 4;
+
+class SimulationFrontend {
     // Windowing
     int window_width  = 1000;
     int window_height = 1000;
@@ -111,3 +126,4 @@ private:
     void ui_state_specifics();
     void show_ui();
 };
+

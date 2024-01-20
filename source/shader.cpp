@@ -7,10 +7,25 @@
 
 #include <GL/glew.h>
 
-enum ShaderStage {
-    COMPILATION = 0,
-    LINKING = 1
-};
+static void check_shader_errors(
+    unsigned    shader_handle,
+    const char *target,
+    auto      &&get_iv,
+    auto      &&get_log,
+    int         status) 
+{
+    constexpr int BUF_SIZE = 1024;
+    char info[BUF_SIZE];
+
+    int success;
+    get_iv(shader_handle, status, &success);
+
+    if (!success) {
+        get_log(shader_handle, BUF_SIZE, nullptr, info);
+        std::cout << "Error in " << target << ":\n" << info << "\n";
+    }
+}
+
 
 Shader::Shader(const char *vert_path, const char *frag_path)
 {
@@ -21,7 +36,6 @@ Shader::Shader(const char *vert_path, const char *frag_path)
     load_and_compile(frag_path, frag_handle);
 
     compile_program(vert_handle, frag_handle);
-    use();
 }
 
 Shader::~Shader()
@@ -40,7 +54,12 @@ void Shader::load_and_compile(const char *path, unsigned shader_handle) const
     glShaderSource(shader_handle, 1, &csrc, NULL);
     glCompileShader(shader_handle);
 
-    check_for_errors(COMPILATION, shader_handle, path);
+    check_shader_errors(
+        shader_handle, 
+        path, 
+        glGetShaderiv, 
+        glGetShaderInfoLog, 
+        GL_COMPILE_STATUS);
 }
 
 void Shader::compile_program(unsigned v_handle, unsigned f_handle)
@@ -50,31 +69,12 @@ void Shader::compile_program(unsigned v_handle, unsigned f_handle)
     glAttachShader(handle, f_handle);
     glLinkProgram(handle);
 
-    check_for_errors(LINKING, handle, "linker");
-}
-
-void Shader::check_for_errors(int stage, 
-                              unsigned shader_handle, 
-                              const char *target) const
-{
-    // Mappings from ShaderStage to opengl functions
-    static const decltype(glGetShaderiv)      get_iv[]  = { glGetShaderiv, 
-                                                            glGetProgramiv };
-    static const decltype(glGetShaderInfoLog) get_log[] = { glGetShaderInfoLog, 
-                                                            glGetProgramInfoLog };
-    static const int                          status[]  = { GL_COMPILE_STATUS,  
-                                                            GL_LINK_STATUS };
-
-    constexpr int BUF_SIZE = 1024;
-    char info[BUF_SIZE];
-
-    int success;
-    get_iv[stage](shader_handle, status[stage], &success);
-
-    if (!success) {
-        get_log[stage](shader_handle, BUF_SIZE, nullptr, info);
-        std::cout << "Error in " << target << ":\n" << info << "\n"; 
-    }
+    check_shader_errors(
+        handle, 
+        "linker", 
+        glGetProgramiv, 
+        glGetProgramInfoLog, 
+        GL_LINK_STATUS);
 }
 
 void Shader::use() const 

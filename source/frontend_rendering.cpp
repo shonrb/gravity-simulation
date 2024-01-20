@@ -27,7 +27,8 @@ void SimulationFrontend::draw_bodies()
     body_shader->uniform_vec3("camera_pos", glm::value_ptr(cam_pos));
 
     // Update the shader light sources
-    static const auto set_light_param = [&](int num, std::string field, glm::vec3 value) {
+    static const auto set_light_param = 
+    [&](int num, std::string field, glm::vec3 value) {
         auto name = "lights[" + std::to_string(num) + "]." + field;
         body_shader->uniform_vec3(name.c_str(), glm::value_ptr(value));
     };
@@ -41,11 +42,6 @@ void SimulationFrontend::draw_bodies()
         if (instance.emits_light) {
             set_light_param(num_lights, "pos",      physics.position);
             set_light_param(num_lights, "colour",   instance.colour);
-            /*
-            set_light_param(num_lights, "ambient",  instance.ambient);
-            set_light_param(num_lights, "diffuse",  instance.diffuse);
-            set_light_param(num_lights, "specular", instance.specular);
-            */
             ++num_lights;
         }
     }
@@ -56,7 +52,11 @@ void SimulationFrontend::draw_bodies()
     bodies_instance_vbo->set_data(simulation.body_instance, GL_DYNAMIC_DRAW);
     
     body_vao->use();
-    glDrawArraysInstanced(GL_TRIANGLES, 0, SPHERE_VERTEX_COUNT, simulation.num_bodies);
+    glDrawArraysInstanced(
+        GL_TRIANGLES, 
+        0, 
+        SPHERE_VERTEX_COUNT, 
+        simulation.num_bodies);
 }
 
 void SimulationFrontend::apply_bloom()
@@ -65,9 +65,8 @@ void SimulationFrontend::apply_bloom()
     bloom_shader->use();
     screen_vao->use();
 
-    auto bloom_pass = [&](GLFrameBuffer *source, 
-                          GLFrameBuffer *dest, 
-                          bool horizontal, int tex) {
+    auto bloom_pass = 
+    [&](GLFrameBuffer *source, GLFrameBuffer *dest, bool horizontal, int tex) {
         bloom_shader->uniform_int("horizontal", horizontal);
         dest->use();
         source->use_texture(tex, GL_TEXTURE0);
@@ -99,3 +98,4 @@ void SimulationFrontend::render_scene()
     bloom_horizontal_fbo->use_texture(0, GL_TEXTURE1);
     glDrawArrays(GL_TRIANGLES, 0, SCREEN_VERTEX_COUNT);
 }
+

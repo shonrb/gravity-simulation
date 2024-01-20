@@ -33,11 +33,21 @@ public:
     ~GLVertexBuffer();
     template<typename T> 
     void set_data(const typename std::vector<T>& buffer, GLenum usage);
+    template<typename T, size_t N> 
+    void set_data(const typename std::array<T, N>& buffer, GLenum usage);
     void use() const;
 };
 
 template<typename T> 
 void GLVertexBuffer::set_data(const typename std::vector<T>& buffer, GLenum usage)
+{
+    use();
+    size_t size = sizeof(T) * buffer.size();
+    glBufferData(GL_ARRAY_BUFFER, size, buffer.data(), usage);
+}
+
+template<typename T, size_t N> 
+void GLVertexBuffer::set_data(const typename std::array<T, N>& buffer, GLenum usage)
 {
     use();
     size_t size = sizeof(T) * buffer.size();

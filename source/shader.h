@@ -2,6 +2,7 @@
 #define __SHADER_H
 
 #include <string>
+#include <iostream>
 
 class Shader {
     unsigned handle;
@@ -23,9 +24,6 @@ private:
     void load_and_compile(const char *path, unsigned shader_handle) const;
     void compile_program(unsigned v_handle, unsigned f_handle);
     void log_error(int error_type, unsigned shader, const char *target) const;
-    void check_for_errors(int stage, 
-                          unsigned shader_handle, 
-                          const char *target) const;
 };
 #endif
 

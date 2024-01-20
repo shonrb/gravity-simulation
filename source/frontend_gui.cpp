@@ -26,9 +26,13 @@ static void ui_body_editing(BodyInfo&     info,
         input_number++;
     };
 
-    const auto vector3_input = [&](const char *name,  const char *comp0, 
-                                   const char *comp1, const char *comp2, 
-                                   glm::vec3 *v) {
+    const auto vector3_input = [&](
+        const char *name, 
+        const char *comp0, 
+        const char *comp1, 
+        const char *comp2, 
+        glm::vec3 *v) {
+
         ImGui::Text(name);
         scalar_input(comp0, &v->x);
         scalar_input(comp1, &v->y);
@@ -59,10 +63,11 @@ static void ui_body_editing(BodyInfo&     info,
         flags |= ImGuiColorEditFlags_PickerHueWheel;
         flags |= ImGuiColorEditFlags_DisplayRGB;
 
-        ImGui::ColorPicker4("##Colour", 
-                            (float*) glm::value_ptr(instance.colour), 
-                            flags, 
-                            nullptr);
+        ImGui::ColorPicker4(
+            "##Colour", 
+            (float*) glm::value_ptr(instance.colour), 
+            flags, 
+            nullptr);
         ImGui::Checkbox("emits light", (bool*) &instance.emits_light);
     }
 
@@ -102,9 +107,7 @@ void SimulationFrontend::ui_body_selection()
 {
     // Draw a selection menu containing all the 
     // bodies currently in the simulation
-    auto body_selection = [&](const char *text, 
-                              auto&       selected_body, 
-                              bool        clear) {
+    auto select = [&](const char *text, auto&& selected_body, bool clear) {
         if (ImGui::Button(text)) {
             ImGui::OpenPopup(text);
         }
@@ -138,12 +141,14 @@ void SimulationFrontend::ui_body_selection()
 
     };
 
-    body_selection("Select body to track", 
-                   tracked_body,
-                   false);
-    body_selection("Select body to draw relative to", 
-                   simulation.draw_tracers_relative_to,
-                   true);
+    select(
+        "Select body to track", 
+        tracked_body, 
+        false);
+    select(
+        "Select body to draw relative to", 
+        simulation.draw_tracers_relative_to,
+        true);
 }
 
 void SimulationFrontend::ui_state_specifics()
@@ -205,3 +210,4 @@ void SimulationFrontend::show_ui()
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
+

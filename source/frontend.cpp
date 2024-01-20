@@ -4,20 +4,7 @@
 #include <imgui_impl_opengl3.h>
 #include <misc/cpp/imgui_stdlib.h>
 #include <algorithm>
-
-std::vector<float> SPHERE_MESH = {
-#include "../resources/spheremesh.txt"
-};
-
-std::vector<float> SCREEN_MESH = {
-//   Position       Tex coords
-    -1.0f,  1.0f,   0.0f, 1.0f,
-    -1.0f, -1.0f,   0.0f, 0.0f,
-     1.0f, -1.0f,   1.0f, 0.0f,
-    -1.0f,  1.0f,   0.0f, 1.0f,
-     1.0f, -1.0f,   1.0f, 0.0f,
-     1.0f,  1.0f,   1.0f, 1.0f
-};
+#include <array>
 
 void SimulationFrontend::init_graphics()
 {
@@ -154,8 +141,6 @@ void SimulationFrontend::init_shaders()
 }
 
 SimulationFrontend::SimulationFrontend()
-: SPHERE_VERTEX_COUNT(SPHERE_MESH.size() / 3)
-, SCREEN_VERTEX_COUNT(SCREEN_MESH.size() / 4)
 {
     init_graphics();
     init_framebuffers();
@@ -367,3 +352,4 @@ void SimulationFrontend::run()
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
+
