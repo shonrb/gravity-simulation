@@ -126,7 +126,8 @@ void SimulationFrontend::ui_body_selection()
             }
 
             for (int i = 0; i < simulation.num_bodies; ++i) {
-                auto name = simulation.body_info[i].name;
+                auto name = simulation.body_info[i].name; 
+                name += "##" + std::to_string(i); // Make unique
                 if (ImGui::Selectable(name.c_str())) {
                     selected_body = i;
                     // Switching relative body means the
