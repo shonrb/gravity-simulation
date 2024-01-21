@@ -188,6 +188,10 @@ void SimulationFrontend::ui_state_specifics()
             auto& inst = simulation.body_instance[tracked_body];
             ui_body_editing(info, phys, inst);
 
+            if (ImGui::Button("Draw relative to body")) {
+                simulation.draw_tracers_relative_to = tracked_body;
+            }
+
             if (ImGui::Button("Delete body")) {
                 simulation.delete_body(tracked_body);
                 tracked_body = Simulation::NO_BODY;

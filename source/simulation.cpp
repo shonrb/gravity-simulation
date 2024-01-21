@@ -71,10 +71,10 @@ void update_forces(std::vector<BodyPhysics>& bodies, float time_step)
 
             // Avoid division by 0
             if (abs(radius) > epsilon) {
-                float radius2 = radius * radius;
-                float acceleration_scalar = (grav_constant * other.mass) / radius2;
+                float r2 = radius * radius;
+                float a  = (grav_constant * other.mass) / r2;
                 // F = Gm1m2/r^2, F = ma, a = Gm/r^2
-                glm::vec3 acceleration = acceleration_scalar * force_dir;
+                glm::vec3 acceleration = a * force_dir;
                 body.velocity += acceleration * time_step;
             }
         }
