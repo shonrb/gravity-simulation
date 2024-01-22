@@ -323,7 +323,7 @@ void SimulationFrontend::update_viewport()
 {
     constexpr float FOV       = glm::radians(45.0f);
     constexpr float NEAR_CLIP = .1f;
-    constexpr float FAR_CLIP  = 1000.0f;
+    constexpr float FAR_CLIP  = 10000.0f;
 
     float aspect_ratio = (float) window_width / (float) window_height;
 

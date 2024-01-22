@@ -124,6 +124,9 @@ void SimulationFrontend::ui_body_selection()
         if (ImGui::BeginPopup(text)) {
             if (ImGui::Selectable("NONE")) {
                 selected_body = Simulation::NO_BODY;
+                if (clear) {
+                    simulation.clear_tracers();
+                }
             }
 
             for (int i = 0; i < simulation.num_bodies; ++i) {

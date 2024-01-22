@@ -25,6 +25,9 @@ ifeq ($(UNAME_S), Windows_NT)
 	FLAGS += `pkg-config --static --libs --cflags sdl2`
 endif
 
+OBJS =  imgui.o imgui_draw.o imgui_tables.o imgui_widgets.o
+OBJS += imgui_impl_sdl.o imgui_impl_opengl3.o imgui_demo.o imgui_stdlib.o
+
 %.o:%.cpp
 	$(CC) $(FLAGS) -c -o binaries/$@ $<
 %.o:external/imgui/%.cpp

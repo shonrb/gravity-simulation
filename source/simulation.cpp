@@ -96,16 +96,16 @@ void Simulation::calculate_trajectories()
     for (int step = 0; step < precalc_steps; ++step) {
         update_forces(copy, 1.0f);
         for (int i = 0; i < num_bodies; ++i) {
+            auto& physics = copy[i];
+            physics.position += physics.velocity;
+            auto& info = body_info[i];
+            
             // Ignore if drawing relative to this body, as tracers
             // will all be the same as the body's position
             if (i == draw_tracers_relative_to) {
                 continue;
             }
 
-            auto& physics = copy[i];
-            physics.position += physics.velocity;
-            auto& info = body_info[i];
-            
             // Trajectories may be drawn relative to a body,
             // so subtract it's position for all tracers
             glm::vec3 relative, relative_orig;
@@ -181,29 +181,28 @@ void Simulation::load_simulation(const std::string &path)
 {
     std::ifstream file(path, std::ios::binary);
     if (file.good()) {
-        int count;
-        file.read(reinterpret_cast<char*>(&count), sizeof(count));
+        auto read = [&]<typename T>() -> T {
+            T buf;
+            file.read(reinterpret_cast<char*>(&buf), sizeof(T));
+            return buf;
+        };
+        int count = read.operator()<int>();
         std::vector<BodyPhysics> phys;
         for (int _ = 0; _ < count; ++_) {
-            BodyPhysics b;
-            file.read(reinterpret_cast<char*>(&b), sizeof(b));
+            auto b = read.operator()<BodyPhysics>();
             phys.push_back(b);
         }
         std::vector<BodyInstance> inst;
         for (int _ = 0; _ < count; ++_) {
-            BodyInstance i;
-            file.read(reinterpret_cast<char*>(&i), sizeof(i));
+            auto i = read.operator()<BodyInstance>();
             inst.push_back(i);
         }
         std::vector<BodyInfo> info;
-        for (int _ = 0; _ < count; ++_) {
-            size_t len;
-            file.read(reinterpret_cast<char*>(&len), sizeof(len));
+        for (int _i = 0; _i < count; ++_i) {
+            auto len = read.operator()<size_t>();
             std::string name = "";
-            for (int __ = 0; __ < len; ++__) {
-                char c;
-                file.read(reinterpret_cast<char*>(&c), sizeof(c));
-                name += c;
+            for (int _j = 0; _j < len; ++_j) {
+                name += read.operator()<char>();
             }
             info.push_back(BodyInfo{name});
         }
