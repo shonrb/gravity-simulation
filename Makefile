@@ -1,9 +1,11 @@
 CC        =  g++
 EXEC      =  binaries/prog
 SRC       =  $(wildcard source/*.cpp)
+SRC       += external/ImGuiFileDialog/ImGuiFileDialog.cpp
 FLAGS     =  -lGLEW
 FLAGS     += -Wall -Wextra -Wpedantic -std=c++20
-FLAGS     += -Iexternal/glm -Iexternal/imgui -Iexternal/imgui/backends
+FLAGS     += -Iexternal/glm -Iexternal/imgui 
+FLAGS     += -Iexternal/imgui/backends -Iexternal/ImGuiFileDialog
 OBJ       =  $(wildcard binaries/*.o)
 IMGUI_SRC =  $(wildcard external/imgui/*.cpp)
 

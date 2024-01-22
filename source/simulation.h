@@ -45,6 +45,8 @@ struct Simulation {
     void clear_tracers();
     void delete_body(int index);
     void update();
+    void load_simulation(const std::string &path);
+    void save_simulation(const std::string &path);
 
 private:
     void calculate_trajectories();

@@ -2,6 +2,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include <fstream>
 
 const BodyInfo& Simulation::get_info(int index) const
 {
@@ -175,3 +176,62 @@ void Simulation::update()
 
     ++num_updates;
 }
+
+void Simulation::load_simulation(const std::string &path)
+{
+    std::ifstream file(path, std::ios::binary);
+    if (file.good()) {
+        int count;
+        file.read(reinterpret_cast<char*>(&count), sizeof(count));
+        std::vector<BodyPhysics> phys;
+        for (int _ = 0; _ < count; ++_) {
+            BodyPhysics b;
+            file.read(reinterpret_cast<char*>(&b), sizeof(b));
+            phys.push_back(b);
+        }
+        std::vector<BodyInstance> inst;
+        for (int _ = 0; _ < count; ++_) {
+            BodyInstance i;
+            file.read(reinterpret_cast<char*>(&i), sizeof(i));
+            inst.push_back(i);
+        }
+        std::vector<BodyInfo> info;
+        for (int _ = 0; _ < count; ++_) {
+            size_t len;
+            file.read(reinterpret_cast<char*>(&len), sizeof(len));
+            std::string name = "";
+            for (int __ = 0; __ < len; ++__) {
+                char c;
+                file.read(reinterpret_cast<char*>(&c), sizeof(c));
+                name += c;
+            }
+            info.push_back(BodyInfo{name});
+        }
+
+        num_bodies = count;
+        body_info = info;
+        body_physics = phys;
+        body_instance = inst;
+    }
+}
+
+void Simulation::save_simulation(const std::string &path)
+{
+    std::ofstream file(path, std::ios::binary);
+    if (file.good()) {
+        file.write(reinterpret_cast<char*>(&num_bodies), sizeof(num_bodies));
+        for (auto &physics : body_physics) {
+            file.write(reinterpret_cast<char*>(&physics), sizeof(physics));
+        }
+        for (auto &instance : body_instance) {
+            file.write(reinterpret_cast<char*>(&instance), sizeof(instance));
+        }
+        for (auto &info : body_info) {
+            auto &name = info.name;
+            auto len   = name.length();
+            file.write(reinterpret_cast<char*>(&len), sizeof(len));
+            file.write(reinterpret_cast<const char*>(name.c_str()), len);
+        }
+    }
+}
+

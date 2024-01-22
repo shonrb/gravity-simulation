@@ -7,6 +7,7 @@
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
 #include <misc/cpp/imgui_stdlib.h>
+#include <ImGuiFileDialog.h>
 
 static void ui_body_editing(BodyInfo&     info, 
                             BodyPhysics&  physics, 
@@ -197,8 +198,39 @@ void SimulationFrontend::ui_state_specifics()
                 tracked_body = Simulation::NO_BODY;
             }
         }
+
+        ui_saving_loading();
     } else {
         ImGui::Checkbox("Show trails", &render_tracers);
+    }
+}
+
+void SimulationFrontend::ui_saving_loading()
+{
+    auto *file_dialog = ImGuiFileDialog::Instance();
+
+    auto handle_file = [&](const std::string &name, auto &&action) {
+        std::string toggle = name + "##Toggle";
+        if (ImGui::Button(toggle.c_str())) {
+            file_dialog->OpenDialog(name, name, ".sim", ".");
+        }
+
+        if (file_dialog->Display(name)) {
+            if (file_dialog->IsOk()) {
+                auto file = file_dialog->GetFilePathName(); 
+                action(file);
+            }
+            file_dialog->Close();
+        }
+    };
+
+    if (ImGui::CollapsingHeader("Manage Simulation")) {
+        handle_file("Load Simulation", [&](auto s) { 
+            simulation.load_simulation(s);
+        });
+        handle_file("Save Simulation", [&](auto s) { 
+            simulation.save_simulation(s); 
+        });
     }
 }
 

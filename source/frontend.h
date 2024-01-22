@@ -124,6 +124,7 @@ private:
     void ui_state_switching();
     void ui_body_selection();
     void ui_state_specifics();
+    void ui_saving_loading();
     void show_ui();
 };
 
